@@ -12,23 +12,20 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 def fetch_cftc_data(x, start = None, end = None):
-    # Unauthenticated client only works with public data sets.
-    # Note the domain and resource ID are separated in the URL.
     client = Socrata("publicreporting.cftc.gov", None)
 
-    # Specify the resource ID or path in the get method.
-    # Add any query parameters as needed, including the date range.
+    # Add any query parameters as needed
     results = client.get(
         "6dca-aqww",
         limit=50000,
         commodity=x
     )
-
     # Convert to pandas DataFrame
     results_df = pd.DataFrame.from_records(results)
 
     # Filter data based on the date range
     results_df['report_date'] = pd.to_datetime(results_df['report_date_as_yyyy_mm_dd'])
+    #Ask for the market
     inp = input("Do you want to select a market? Yes or No ")
 
     if inp.lower() == 'yes':
@@ -101,10 +98,6 @@ def calculate_zscore(df, column_name, window=52):
 
 
 # # SINGLE PLOT
-
-# In[2]:
-
-
 def plot_data(df, columns=['noncomm_net', 'comm_net'], open_interest=False, zscore=False):
     # Create a figure with two y-axes
     if not open_interest:
@@ -172,9 +165,6 @@ def plot_data(df, columns=['noncomm_net', 'comm_net'], open_interest=False, zsco
 
 
 # # SUBPLOTS
-
-# In[3]:
-
 
 def plot_subplots(df, columns=['noncomm_net', 'comm_net'], open_interest=False, zscore=False):
     if not open_interest:
